@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
+
+    <script type="text/javascript">
+        function preloader(){
+            document.getElementById("loading").style.display = "none";
+        }
+        window.onload = preloader;
+    </script>
+
+    <script type="text/javascript" src="data/people.js"></script>
+    <script type="text/javascript" src="data/companies.js"></script>
+    <script type="text/javascript" src="data/relationships.js"></script>
+
+    <script type="text/javascript" src="dist/vis.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="dist/vis.css">
+
+    <style type="text/css">
+        #mynetwork {
+            height: 1000px;
+            width: 100%;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<h2>Maryland Genealogy Project</h2>
+<h3 id="loading">Loading...</h3>
+
+<div id="mynetwork"></div>
+
+<script type="text/javascript">
+    var network;
+
+    var nodes = new vis.DataSet();
+    var edges = new vis.DataSet();
+    var connections = {};
+
+    var opp, acc, usr;
+    var nodesData = [];
+    var edgesData = [];
+
+    var check = 0;
+
+    var colors = {
+        "director of":              "#efbb61",
+        "acquired":                 "#37230c",
+        "co-founder of":            "#84fefb",
+        "COB":                      "#a84f1a",
+        "employed by":              "#108817",
+        "President":                "#78beb8",
+        "invested in":              "#da30d9",
+        "CEO & CSO":                "#1d79ee",
+        "founded":                  "#d0696f",
+        "CEO":                      "#439f76",
+        "recruited":                "#c1a8b8",
+        "educated by":              "#38ca86",
+        "Exec COB":                 "#d813e0",
+        "general partner":          "#19c9f0",
+        "changed name to":          "#45d086",
+        "merged with":              "#e6781a",
+        "spunout":                  "#eac4a6",
+        "COB, Pres. CEO":           "#b79fa7",
+        "advisor to":               "#a0e8cf",
+        "created":                  "#c634ae",
+        "VP":                       "#8e9ced",
+        "co-created":               "#258f42",
+        "Pres & CEO":               "#64ae28",
+        "lead director of":         "#e11937",
+        "Partner":                  "#aa707d",
+        "sold to":                  "#1a0d85",
+        "collaboration with":       "#ee7ad3",
+        "sci advisory bd":          "#db964b",
+        "interim CEO":              "#a00fbd",
+        "provided IP to":           "#1cdbf8",
+        "scientific founder of":    "#74232f",
+        "COB & CEO":                "#80fa8a",
+        "founded in":               "#e75f9a",
+        "IPO":                      "#884dcd",
+        "moved out of Maryland":    "#debdfb"
+    };
+
+    function randColor() {
+        for (var c in colors) {
+            colors[c] = '#'+Math.floor(Math.random()*16777215).toString(16);
+        }
+    }
+
+    function buildNetwork() {
+
+
+            $.each(people, function(p) {
+                connections[people[p]["Last Name"]+ ", " + people[p]["First Name"]] = [];
+                nodesData.push({id: people[p]["Last Name"]+ ", " + people[p]["First Name"], label: people[p]["Last Name"]+ ", " + people[p]["First Name"], group: "person", value: 1});
+            });
+
+            $.each(companies, function(c) {
+                connections[companies[c]["Company Name"]] = [];
+
+                var g = "company";
+                if (companies[c].Pillar == 1)
+                    g = "company";
+                else if (companies[c].Investor == 1)
+                    g = "investor";
+                else if (companies[c]["Non-profit"] == 1)
+                    g = "non-profit";
+
+                nodesData.push({id: companies[c]["Company Name"], label: companies[c]["Company Name"], group: g, value: 1});
+            });
+
+            $.each(relationships, function(r) {
+                var color = colors[ relationships[r].Relationship ];
+
+                /* FIXING SOMETHING */
+                if (!(relationships[r].Source in connections)) {
+                    connections[relationships[r].Source] = [];
+                    nodesData.push({id: relationships[r].Source, label: relationships[r].Source, group: "unknown", value: 1});
+                }
+                if (!(relationships[r].Target in connections)) {
+                    connections[relationships[r].Target] = [];
+                    nodesData.push({id: relationships[r].Target, label: relationships[r].Target, group: "unknown", value: 1});
+                }
+
+                connections[relationships[r].Source].push(relationships[r].Target);
+                connections[relationships[r].Target].push(relationships[r].Source);
+
+                var label = ""
+
+                if (relationships[r]["Start Year"] != "") {
+                    label += " (" + relationships[r]["Start Year"];
+                    if (relationships[r]["End Year"] != "") {
+                        label += " - " + relationships[r]["End Year"];
+                    }
+                    label += ")";
+                }
+
+                edgesData.push({from: relationships[r].Source, to: relationships[r].Target, color: color, label: relationships[r].Relationship + label});
+            });
+
+        nodes.add(nodesData);
+        edges.add(edgesData);
+    }
+
+    function drawNetwork() {
+
+        var container = document.getElementById('mynetwork');
+        var data = {
+            nodes: nodes,
+            edges: edges
+        };
+        var options = {
+            //configurePhysics:true,
+            nodes: {
+                shape: 'dot',
+                fontSize: 16,
+                fontFace: "Tahoma",
+
+                color: {
+                    border: "#ffffff"
+                },
+                highlight: {
+                    border: "#ffffff"
+                }
+            },
+            edges: {
+                width: 1
+            },
+            groups: {
+                company: {
+                    color: 'black'
+                },
+                non_profit: {
+                    color: 'brown'
+                },
+                investor: {
+                    color: 'green'
+                },
+                person: {
+                    color: 'blue'
+                },
+                unknown: {
+                    color: 'red'
+                }
+            },
+            tooltip: {
+                delay: 200,
+                fontSize: 12,
+                color: {
+                    background: "#fff"
+                }
+            },
+            smoothCurves: {dynamic: true, type: "continuous"},
+            stabilize: true,
+            configurePhysics:false,
+            physics: {barnesHut: {gravitationalConstant: -9025, centralGravity: 0, springLength: 283}},
+            hideEdgesOnDrag: false
+        };
+
+        network = new vis.Network(container, data, options);
+        network.on("click", onClick);
+    }
+
+    function redrawAll() {
+        nodes.clear();
+        edges.clear();
+
+        network = null;
+
+        buildNetwork();
+        drawNetwork();
+    }
+
+
+
+    function setSize() {
+        for (var node in connections) {
+
+            var s = connections[node].length;
+
+            if (s >= 1)
+                nodes.update({id: node, value: s});
+        }
+    }
+
+    function resetColor() {
+        var node;
+        var n = nodes.getIds();
+
+        for (node in n) {
+            nodes.update({id: n[node], color: undefined, fontColor: undefined});
+        }
+    }
+
+    function setNonNeighborColor(root) {
+        var node, edge;
+        var n = nodes.getIds();
+
+        var temp =  connections[root];
+        temp.push(root);
+
+        var non_neighbors = $.merge($.grep(temp, function(el, idx) {
+            return $.inArray(el, n) > -1;
+        }, true), $.grep(n, function(el, idx) {
+            return $.inArray(el, temp) > -1;
+        }, true));
+
+        for(var no in non_neighbors) {
+            nodes.update({id: non_neighbors[no], color: '#eeeeeee', fontColor: "#eeeeee"});
+        }
+    }
+
+    function onClick(selectedItems) {
+        resetColor();
+        if (selectedItems.nodes.length == 1)
+            setNonNeighborColor(selectedItems.nodes[0]);
+    }
+
+    //redrawAll();
+    buildNetwork();
+    setSize();
+    drawNetwork();
+    /*
+     function onClick(selectedItems) {
+     var nodeId;
+     var degrees = 2;
+     // we get all data from the dataset once to avoid updating multiple times.
+     var allNodes = nodes.get({returnType: "Object"});
+     if (selectedItems.nodes.length == 0) {
+     // restore on unselect
+     for (nodeId in allNodes) {
+     if (allNodes.hasOwnProperty(nodeId)) {
+     allNodes[nodeId].color = undefined;
+     if (allNodes[nodeId].oldLabel !== undefined) {
+     allNodes[nodeId].label = allNodes[nodeId].oldLabel;
+     allNodes[nodeId].oldLabel = undefined;
+     }
+     allNodes[nodeId]['levelOfSeperation'] = undefined;
+     allNodes[nodeId]['inConnectionList'] = undefined;
+     }
+     }
+     }
+     else {
+     var allEdges = edges.get();
+
+     // we clear the level of separation in all nodes.
+     clearLevelOfSeperation(allNodes);
+
+     // we will now start to collect all the connected nodes we want to highlight.
+     var connectedNodes = selectedItems.nodes;
+
+     // we can store them into levels of separation and we could then later use this to define a color per level
+     // any data can be added to a node, this is just stored in the nodeObject.
+     storeLevelOfSeperation(connectedNodes, 0, allNodes);
+     for (var i = 1; i < degrees + 1; i++) {
+     appendConnectedNodes(connectedNodes, allEdges);
+     storeLevelOfSeperation(connectedNodes, i, allNodes);
+     }
+     for (nodeId in allNodes) {
+     if (allNodes.hasOwnProperty(nodeId)) {
+     if (allNodes[nodeId]['inConnectionList'] == true) {
+     if (allNodes[nodeId]['levelOfSeperation'] !== undefined) {
+     if (allNodes[nodeId]['levelOfSeperation'] >= 2) {
+     allNodes[nodeId].color = 'rgba(150,150,150,0.75)';
+     }
+     else {
+     allNodes[nodeId].color = undefined;
+     }
+     }
+     else {
+     allNodes[nodeId].color = undefined;
+     }
+     if (allNodes[nodeId].oldLabel !== undefined) {
+     allNodes[nodeId].label = allNodes[nodeId].oldLabel;
+     allNodes[nodeId].oldLabel = undefined;
+     }
+     }
+     else {
+     allNodes[nodeId].color = 'rgba(200,200,200,0.5)';
+     if (allNodes[nodeId].oldLabel === undefined) {
+     allNodes[nodeId].oldLabel = allNodes[nodeId].label;
+     allNodes[nodeId].label = "";
+     }
+     }
+     }
+     }
+     }
+     var updateArray = [];
+     for (nodeId in allNodes) {
+     if (allNodes.hasOwnProperty(nodeId)) {
+     updateArray.push(allNodes[nodeId]);
+     }
+     }
+     nodes.update(updateArray);
+     }
+
+
+     *//**
+     * update the allNodes object with the level of separation.
+     * Arrays are passed by reference, we do not need to return them because we are working in the same object.
+     *//*
+     function storeLevelOfSeperation(connectedNodes, level, allNodes) {
+     for (var i = 0; i < connectedNodes.length; i++) {
+     var nodeId = connectedNodes[i];
+     if (allNodes[nodeId]['levelOfSeperation'] === undefined) {
+     allNodes[nodeId]['levelOfSeperation'] = level;
+     }
+     allNodes[nodeId]['inConnectionList'] = true;
+     }
+     }
+
+     function clearLevelOfSeperation(allNodes) {
+     for (var nodeId in allNodes) {
+     if (allNodes.hasOwnProperty(nodeId)) {
+     allNodes[nodeId]['levelOfSeperation'] = undefined;
+     allNodes[nodeId]['inConnectionList'] = undefined;
+     }
+     }
+     }
+
+     *//**
+     * Add the connected nodes to the list of nodes we already have
+     *
+     *
+     *//*
+     function appendConnectedNodes(sourceNodes, allEdges) {
+     var tempSourceNodes = [];
+     // first we make a copy of the nodes so we do not extend the array we loop over.
+     for (var i = 0; i < sourceNodes.length; i++) {
+     tempSourceNodes.push(sourceNodes[i])
+     }
+
+     for (var i = 0; i < tempSourceNodes.length; i++) {
+     var nodeId = tempSourceNodes[i];
+     if (sourceNodes.indexOf(nodeId) == -1) {
+     sourceNodes.push(nodeId);
+     }
+     addUnique(getConnectedNodes(nodeId, allEdges), sourceNodes);
+     }
+     tempSourceNodes = null;
+     }
+
+     *//**
+     * Join two arrays without duplicates
+     * @param fromArray
+     * @param toArray
+     *//*
+     function addUnique(fromArray, toArray) {
+     for (var i = 0; i < fromArray.length; i++) {
+     if (toArray.indexOf(fromArray[i]) == -1) {
+     toArray.push(fromArray[i]);
+     }
+     }
+     }
+
+     *//**
+     * Get a list of nodes that are connected to the supplied nodeId with edges.
+     * @param nodeId
+     * @returns {Array}
+     *//*
+     function getConnectedNodes(nodeId, allEdges) {
+     var edgesArray = allEdges;
+     var connectedNodes = [];
+
+     for (var i = 0; i < edgesArray.length; i++) {
+     var edge = edgesArray[i];
+     if (edge.to == nodeId) {
+     connectedNodes.push(edge.from);
+     }
+     else if (edge.from == nodeId) {
+     connectedNodes.push(edge.to)
+     }
+     }
+     return connectedNodes;
+     }*/
+</script>
+
+
+</body>
+</html>
