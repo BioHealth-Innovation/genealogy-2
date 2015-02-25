@@ -85,7 +85,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.util = __webpack_require__(1);
   exports.DOMutil = __webpack_require__(2);
 
-  // data
+  // .data
   exports.DataSet = __webpack_require__(3);
   exports.DataView = __webpack_require__(4);
   exports.Queue = __webpack_require__(5);
@@ -1642,23 +1642,23 @@ return /******/ (function(modules) { // webpackBootstrap
    *     });
    *
    *     dataSet.add(item);
-   *     dataSet.add(data);
+   *     dataSet.add(.data);
    *     dataSet.update(item);
-   *     dataSet.update(data);
+   *     dataSet.update(.data);
    *     dataSet.remove(id);
    *     dataSet.remove(ids);
-   *     var data = dataSet.get();
-   *     var data = dataSet.get(id);
-   *     var data = dataSet.get(ids);
-   *     var data = dataSet.get(ids, options, data);
+   *     var .data = dataSet.get();
+   *     var .data = dataSet.get(id);
+   *     var .data = dataSet.get(ids);
+   *     var .data = dataSet.get(ids, options, .data);
    *     dataSet.clear();
    *
-   * A data set can:
-   * - add/remove/update data
-   * - gives triggers upon changes in the data
-   * - can  import/export data in various data formats
+   * A .data set can:
+   * - add/remove/update .data
+   * - gives triggers upon changes in the .data
+   * - can  import/export .data in various .data formats
    *
-   * @param {Array | DataTable} [data]    Optional array with initial data
+   * @param {Array | DataTable} [data]    Optional array with initial .data
    * @param {Object} [options]   Available options:
    *                             {String} fieldId Field name of the id in the
    *                                              items, 'id' by default.
@@ -1672,7 +1672,7 @@ return /******/ (function(modules) { // webpackBootstrap
    *                                              - {number} max    Maximum number of entries in the queue, Infinity by default
    * @constructor DataSet
    */
-  // TODO: add a DataSet constructor DataSet(data, options)
+  // TODO: add a DataSet constructor DataSet(.data, options)
   function DataSet (data, options) {
     // correctly read optional arguments
     if (data && !Array.isArray(data) && !util.isDataTable(data)) {
@@ -1681,7 +1681,7 @@ return /******/ (function(modules) { // webpackBootstrap
     }
 
     this._options = options || {};
-    this._data = {};                                 // map with data indexed by id
+    this._data = {};                                 // map with .data indexed by id
     this._fieldId = this._options.fieldId || 'id';   // name of the field containing id
     this._type = {};                                 // internal field types (NOTE: this can differ from this._options.type)
 
@@ -1708,7 +1708,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     this._subscribers = {};  // event subscribers
 
-    // add initial data when provided
+    // add initial .data when provided
     if (data) {
       this.add(data);
     }
@@ -1819,7 +1819,7 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Add data.
+   * Add .data.
    * Adding an item will fail when there already is an item with the same id.
    * @param {Object | Array | DataTable} data
    * @param {String} [senderId] Optional sender id
@@ -1933,35 +1933,35 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Get a data item or multiple items.
+   * Get a .data item or multiple items.
    *
    * Usage:
    *
    *     get()
    *     get(options: Object)
-   *     get(options: Object, data: Array | DataTable)
+   *     get(options: Object, .data: Array | DataTable)
    *
    *     get(id: Number | String)
    *     get(id: Number | String, options: Object)
-   *     get(id: Number | String, options: Object, data: Array | DataTable)
+   *     get(id: Number | String, options: Object, .data: Array | DataTable)
    *
    *     get(ids: Number[] | String[])
    *     get(ids: Number[] | String[], options: Object)
-   *     get(ids: Number[] | String[], options: Object, data: Array | DataTable)
+   *     get(ids: Number[] | String[], options: Object, .data: Array | DataTable)
    *
    * Where:
    *
    * {Number | String} id         The id of an item
    * {Number[] | String{}} ids    An array with ids of items
    * {Object} options             An Object with options. Available options:
-   *                              {String} [returnType] Type of data to be
+   *                              {String} [returnType] Type of .data to be
    *                                  returned. Can be 'DataTable' or 'Array' (default)
    *                              {Object.<String, String>} [type]
    *                              {String[]} [fields] field names to be returned
    *                              {function} [filter] filter items
    *                              {String | function} [order] Order the items by
    *                                  a field name or custom sort function.
-   * {Array | DataTable} [data]   If provided, items will be appended to this
+   * {Array | DataTable} [.data]   If provided, items will be appended to this
    *                              array or table. Required in case of Google
    *                              DataTable.
    *
@@ -1974,19 +1974,19 @@ return /******/ (function(modules) { // webpackBootstrap
     var id, ids, options, data;
     var firstType = util.getType(arguments[0]);
     if (firstType == 'String' || firstType == 'Number') {
-      // get(id [, options] [, data])
+      // get(id [, options] [, .data])
       id = arguments[0];
       options = arguments[1];
       data = arguments[2];
     }
     else if (firstType == 'Array') {
-      // get(ids [, options] [, data])
+      // get(ids [, options] [, .data])
       ids = arguments[0];
       options = arguments[1];
       data = arguments[2];
     }
     else {
-      // get([, options] [, data])
+      // get([, options] [, .data])
       options = arguments[0];
       data = arguments[1];
     }
@@ -1998,11 +1998,11 @@ return /******/ (function(modules) { // webpackBootstrap
       returnType = allowedValues.indexOf(options.returnType) == -1 ? "Array" : options.returnType;
 
       if (data && (returnType != util.getType(data))) {
-        throw new Error('Type of parameter "data" (' + util.getType(data) + ') ' +
+        throw new Error('Type of parameter ".data" (' + util.getType(data) + ') ' +
             'does not correspond with specified options.type (' + options.type + ')');
       }
       if (returnType == 'DataTable' && !util.isDataTable(data)) {
-        throw new Error('Parameter "data" must be a DataTable ' +
+        throw new Error('Parameter ".data" must be a DataTable ' +
             'when options.type is "DataTable"');
       }
     }
@@ -2069,11 +2069,11 @@ return /******/ (function(modules) { // webpackBootstrap
     if (returnType == 'DataTable') {
       var columns = this._getColumnNames(data);
       if (id != undefined) {
-        // append a single item to the data table
+        // append a single item to the .data table
         me._appendRow(data, columns, item);
       }
       else {
-        // copy the items to the provided data table
+        // copy the items to the provided .data table
         for (i = 0; i < items.length; i++) {
           me._appendRow(data, columns, items[i]);
         }
@@ -2380,7 +2380,7 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Clear the data
+   * Clear the .data
    * @param {String} [senderId] Optional sender id
    * @return {Array} removedIds    The ids of all removed items
    */
@@ -2445,7 +2445,7 @@ return /******/ (function(modules) { // webpackBootstrap
   /**
    * Find all distinct values of a specified field
    * @param {String} field
-   * @return {Array} values  Array containing all distinct values. If data items
+   * @return {Array} values  Array containing all distinct values. If .data items
    *                         do not contain the specified field are ignored.
    *                         The returned array is unordered.
    */
@@ -2654,7 +2654,7 @@ return /******/ (function(modules) { // webpackBootstrap
   // and trigger changes accordingly
 
   /**
-   * Set a data source for the view
+   * Set a .data source for the view
    * @param {DataSet | DataView} data
    */
   DataView.prototype.setData = function (data) {
@@ -2701,35 +2701,35 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Get data from the data view
+   * Get .data from the .data view
    *
    * Usage:
    *
    *     get()
    *     get(options: Object)
-   *     get(options: Object, data: Array | DataTable)
+   *     get(options: Object, .data: Array | DataTable)
    *
    *     get(id: Number)
    *     get(id: Number, options: Object)
-   *     get(id: Number, options: Object, data: Array | DataTable)
+   *     get(id: Number, options: Object, .data: Array | DataTable)
    *
    *     get(ids: Number[])
    *     get(ids: Number[], options: Object)
-   *     get(ids: Number[], options: Object, data: Array | DataTable)
+   *     get(ids: Number[], options: Object, .data: Array | DataTable)
    *
    * Where:
    *
    * {Number | String} id         The id of an item
    * {Number[] | String{}} ids    An array with ids of items
    * {Object} options             An Object with options. Available options:
-   *                              {String} [type] Type of data to be returned. Can
+   *                              {String} [type] Type of .data to be returned. Can
    *                                              be 'DataTable' or 'Array' (default)
    *                              {Object.<String, String>} [convert]
    *                              {String[]} [fields] field names to be returned
    *                              {function} [filter] filter items
    *                              {String | function} [order] Order the items by
    *                                  a field name or custom sort function.
-   * {Array | DataTable} [data]   If provided, items will be appended to this
+   * {Array | DataTable} [.data]   If provided, items will be appended to this
    *                              array or table. Required in case of Google
    *                              DataTable.
    * @param args
@@ -2741,13 +2741,13 @@ return /******/ (function(modules) { // webpackBootstrap
     var ids, options, data;
     var firstType = util.getType(arguments[0]);
     if (firstType == 'String' || firstType == 'Number' || firstType == 'Array') {
-      // get(id(s) [, options] [, data])
+      // get(id(s) [, options] [, .data])
       ids = arguments[0];  // can be a single id or an array with ids
       options = arguments[1];
       data = arguments[2];
     }
     else {
-      // get([, options] [, data])
+      // get([, options] [, .data])
       options = arguments[0];
       data = arguments[1];
     }
@@ -2762,7 +2762,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }
     }
 
-    // build up the call to the linked data set
+    // build up the call to the linked .data set
     var getArguments = [];
     if (ids != undefined) {
       getArguments.push(ids);
@@ -2828,9 +2828,9 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Event listener. Will propagate all events from the connected data set to
+   * Event listener. Will propagate all events from the connected .data set to
    * the subscribers of the DataView, but will filter the items and only trigger
-   * when there are changes in the filtered data set.
+   * when there are changes in the filtered .data set.
    * @param {String} event
    * @param {Object | null} params
    * @param {String} senderId
@@ -3147,7 +3147,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   /**
    * @constructor Graph3d
-   * Graph3d displays data in 3d.
+   * Graph3d displays .data in 3d.
    *
    * Graph3d is developed in javascript as a Google Visualization Chart.
    *
@@ -3196,7 +3196,7 @@ return /******/ (function(modules) { // webpackBootstrap
     this.camera = new Camera();
     this.eye = new Point3d(0, 0, -1);  // TODO: set eye.z about 3/4 of the width of the window?
 
-    this.dataTable = null;  // The original data table
+    this.dataTable = null;  // The original .data table
     this.dataPoints = null; // The table with point objects
 
     // the column indexes
@@ -3233,7 +3233,7 @@ return /******/ (function(modules) { // webpackBootstrap
     // apply options (also when undefined)
     this.setOptions(options);
 
-    // apply data
+    // apply .data
     if (data) {
       this.setData(data);
     }
@@ -3426,7 +3426,7 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Determine the indexes of the data columns, based on the given style and data
+   * Determine the indexes of the .data columns, based on the given style and .data
    * @param {DataSet} data
    * @param {Number}  style
    */
@@ -3503,9 +3503,9 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Initialize the data from the data table. Calculate minimum and maximum values
+   * Initialize the .data from the .data table. Calculate minimum and maximum values
    * and column index values
-   * @param {Array | DataSet | DataView} rawData   The data containing the items for the Graph.
+   * @param {Array | DataSet | DataView} rawData   The .data containing the items for the Graph.
    * @param {Number}     style   Style Number
    */
   Graph3d.prototype._dataInitialize = function (rawData, style) {
@@ -3571,7 +3571,7 @@ return /******/ (function(modules) { // webpackBootstrap
       this.style == Graph3d.STYLE.BARCOLOR ||
       this.style == Graph3d.STYLE.BARSIZE;
 
-    // determine barWidth from data
+    // determine barWidth from .data
     if (withBars) {
       if (this.defaultXBarWidth !== undefined) {
         this.xBarWidth = this.defaultXBarWidth;
@@ -3631,7 +3631,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
   /**
-   * Filter the data based on the current filter
+   * Filter the .data based on the current filter
    * @param {Array} data
    * @return {Array} dataPoints   Array with point objects which can be drawn on screen
    */
@@ -3643,7 +3643,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     if (this.style === Graph3d.STYLE.GRID ||
       this.style === Graph3d.STYLE.SURFACE) {
-      // copy all values from the google data table to a matrix
+      // copy all values from the google .data table to a matrix
       // the provided values are supposed to form a grid of (x,y) positions
 
       // create two lists with all present x and y values
@@ -3668,7 +3668,7 @@ return /******/ (function(modules) { // webpackBootstrap
       dataY.sort(sortNumber);
 
       // create a grid, a 2d matrix, with all values.
-      var dataMatrix = [];   // temporary data matrix
+      var dataMatrix = [];   // temporary .data matrix
       for (i = 0; i < data.length; i++) {
         x = data[i][this.colX] || 0;
         y = data[i][this.colY] || 0;
@@ -3712,7 +3712,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }
     }
     else {  // 'dot', 'dot-line', etc.
-      // copy all values from the google data table to a list with Point3d objects
+      // copy all values from the google .data table to a list with Point3d objects
       for (i = 0; i < data.length; i++) {
         point = new Point3d();
         point.x = data[i][this.colX] || 0;
@@ -3914,10 +3914,10 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Load data into the 3D Graph
+   * Load .data into the 3D Graph
    */
   Graph3d.prototype._readData = function(data) {
-    // read the data
+    // read the .data
     this._dataInitialize(data, this.style);
 
 
@@ -3926,7 +3926,7 @@ return /******/ (function(modules) { // webpackBootstrap
       this.dataPoints = this.dataFilter._getDataPoints();
     }
     else {
-      // no filtering. load all data
+      // no filtering. load all .data
       this.dataPoints = this._getDataPoints(this.dataTable);
     }
 
@@ -4024,7 +4024,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     this.setSize(this.width, this.height);
 
-    // re-load the data
+    // re-load the .data
     if (this.dataTable) {
       this.setData(this.dataTable);
     }
@@ -4040,7 +4040,7 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   Graph3d.prototype.redraw = function() {
     if (this.dataPoints === undefined) {
-      throw 'Error: graph data not initialized';
+      throw 'Error: graph .data not initialized';
     }
 
     this._resizeCanvas();
@@ -5072,7 +5072,7 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * After having moved the mouse, a tooltip should pop up when the mouse is resting on a data point
+   * After having moved the mouse, a tooltip should pop up when the mouse is resting on a .data point
    * @param {Event}  event   A mouse move event
    */
   Graph3d.prototype._onTooltip = function (event) {
@@ -5113,7 +5113,7 @@ return /******/ (function(modules) { // webpackBootstrap
       this.tooltipTimeout = setTimeout(function () {
         me.tooltipTimeout = null;
 
-        // show a tooltip if we have a data point
+        // show a tooltip if we have a .data point
         var dataPoint = me._dataPointFromXY(mouseX, mouseY);
         if (dataPoint) {
           me._showTooltip(dataPoint);
@@ -5226,10 +5226,10 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Find a data point close to given screen position (x, y)
+   * Find a .data point close to given screen position (x, y)
    * @param {Number} x
    * @param {Number} y
-   * @return {Object | null} The closest data point or null if not close to any data point
+   * @return {Object | null} The closest .data point or null if not close to any .data point
    * @private
    */
   Graph3d.prototype._dataPointFromXY = function (x, y) {
@@ -5243,7 +5243,7 @@ return /******/ (function(modules) { // webpackBootstrap
     if (this.style === Graph3d.STYLE.BAR ||
       this.style === Graph3d.STYLE.BARCOLOR ||
       this.style === Graph3d.STYLE.BARSIZE) {
-      // the data points are ordered from far away to closest
+      // the .data points are ordered from far away to closest
       for (i = this.dataPoints.length - 1; i >= 0; i--) {
         dataPoint = this.dataPoints[i];
         var surfaces  = dataPoint.surfaces;
@@ -5264,7 +5264,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }
     }
     else {
-      // find the closest data point, using distance to the center of the point on 2d screen
+      // find the closest .data point, using distance to the center of the point on 2d screen
       for (i = 0; i < this.dataPoints.length; i++) {
         dataPoint = this.dataPoints[i];
         var point = dataPoint.screen;
@@ -5286,7 +5286,7 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Display a tooltip for given data point
+   * Display a tooltip for given .data point
    * @param {Object} dataPoint
    * @private
    */
@@ -5563,7 +5563,7 @@ return /******/ (function(modules) { // webpackBootstrap
   /**
    * @class Filter
    *
-   * @param {DataSet} data The google data table
+   * @param {DataSet} data The google .data table
    * @param {Number}  column             The index of the column to be filtered
    * @param {Graph} graph           The graph
    */
@@ -6660,7 +6660,7 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Get the data range of the item set.
+   * Get the .data range of the item set.
    * @returns {{min: Date, max: Date}} range  A range with a start and end Date.
    *                                          When no minimum is found, min==null
    *                                          When no maximum is found, max==null
@@ -6920,7 +6920,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
   /**
-   * Get the data range of the item set.
+   * Get the .data range of the item set.
    * @returns {{min: Date, max: Date}} range  A range with a start and end Date.
    *                                          When no minimum is found, min==null
    *                                          When no maximum is found, max==null
@@ -7430,8 +7430,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
   /**
    * @constructor  DataStep
-   * The class DataStep is an iterator for data for the lineGraph. You provide a start data point and an
-   * end data point. The class itself determines the best scale (step size) based on the
+   * The class DataStep is an iterator for .data for the lineGraph. You provide a start .data point and an
+   * end .data point. The class itself determines the best scale (step size) based on the
    * provided start Date, end Date, and minimumStep.
    *
    * If minimumStep is provided, the step size is chosen as close as possible
@@ -8392,7 +8392,7 @@ return /******/ (function(modules) { // webpackBootstrap
   var EPSILON = 0.001; // used when checking collisions, to prevent round-off errors
 
   /**
-   * Order items by their start data
+   * Order items by their start .data
    * @param {Item[]} items
    */
   exports.orderByStart = function(items) {
@@ -10398,8 +10398,8 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Set the group data for this group
-   * @param {Object} data   Group data, can contain properties content and className
+   * Set the group .data for this group
+   * @param {Object} data   Group .data, can contain properties content and className
    */
   Group.prototype.setData = function(data) {
     // update contents
@@ -10545,8 +10545,8 @@ return /******/ (function(modules) { // webpackBootstrap
         if (item.data.subgroup !== undefined) {
           me.subgroups[item.data.subgroup].height = Math.max(me.subgroups[item.data.subgroup].height,item.height);
           me.subgroups[item.data.subgroup].visible = true;
-          //if (visibleSubgroups.indexOf(item.data.subgroup) == -1){
-          //  visibleSubgroups.push(item.data.subgroup);
+          //if (visibleSubgroups.indexOf(item..data.subgroup) == -1){
+          //  visibleSubgroups.push(item..data.subgroup);
           //  me.visibleSubgroups += 1;
           //}
         }
@@ -10793,11 +10793,11 @@ return /******/ (function(modules) { // webpackBootstrap
     //console.log("new line")
     //if (this.groupId == null) {
     //  for (i = 0; i < orderedItems.byStart.length; i++) {
-    //    item = orderedItems.byStart[i].data;
+    //    item = orderedItems.byStart[i]..data;
     //    console.log('start',i,initialPosByStart, item.start.valueOf(), item.content, item.start >= lowerBound && item.start <= upperBound,i == initialPosByStart ? "<------------------- HEREEEE" : "")
     //  }
     //  for (i = 0; i < orderedItems.byEnd.length; i++) {
-    //    item = orderedItems.byEnd[i].data;
+    //    item = orderedItems.byEnd[i]..data;
     //    console.log('rangeEnd',i,initialPosByEnd, item.end.valueOf(), item.content, item.end >= range.start && item.end <= range.end,i == initialPosByEnd ? "<------------------- HEREEEE" : "")
     //  }
     //}
@@ -11073,7 +11073,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }
     };
 
-    this.items = {};      // object with an Item for every data item
+    this.items = {};      // object with an Item for every .data item
     this.groups = {};     // Group object for every group
     this.groupIds = [];
 
@@ -11712,7 +11712,7 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Get the time of an item based on it's data and options.type
+   * Get the time of an item based on it's .data and options.type
    * @param {Object} itemData
    * @returns {string} Returns the type
    * @private
@@ -11967,7 +11967,7 @@ return /******/ (function(modules) { // webpackBootstrap
   ItemSet.prototype._updateItem = function(item, itemData) {
     var oldGroupId = item.data.group;
 
-    // update the items data (will redraw the item when displayed)
+    // update the items .data (will redraw the item when displayed)
     item.setData(itemData);
 
     // update group
@@ -12246,7 +12246,7 @@ return /******/ (function(modules) { // webpackBootstrap
         }
       });
 
-      // apply the changes to the data (if there are changes)
+      // apply the changes to the .data (if there are changes)
       if (changes.length) {
         dataset.update(changes);
       }
@@ -12304,7 +12304,7 @@ return /******/ (function(modules) { // webpackBootstrap
       // update item
 
       // execute async handler to update the item (or cancel it)
-      var itemData = me.itemsData.get(item.id); // get a clone of the data from the dataset
+      var itemData = me.itemsData.get(item.id); // get a clone of the .data from the dataset
       this.options.onUpdate(itemData, function (itemData) {
         if (itemData) {
           me.itemsData.getDataSet().update(itemData);
@@ -12838,7 +12838,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }
     };
 
-    this.items = {};      // object with an Item for every data item
+    this.items = {};      // object with an Item for every .data item
     this.selection = [];  // list with the ids of all selected nodes
     this.lastStart = this.body.range.start;
     this.touchParams = {}; // stores properties while dragging
@@ -12877,7 +12877,7 @@ return /******/ (function(modules) { // webpackBootstrap
     this.svg.style.display = 'block';
     frame.appendChild(this.svg);
 
-    // data axis
+    // .data axis
     this.options.dataAxis.orientation = 'left';
     this.yAxisLeft = new DataAxis(this.body, this.options.dataAxis, this.svg, this.options.groups);
 
@@ -13073,7 +13073,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
   /**
-   * Update the data
+   * Update the .data
    * @param [ids]
    * @private
    */
@@ -13333,7 +13333,7 @@ return /******/ (function(modules) { // webpackBootstrap
         var minDate = this.body.util.toGlobalTime(-this.body.domProps.root.width);
         var maxDate = this.body.util.toGlobalTime(2 * this.body.domProps.root.width);
         var groupsData = {};
-        // fill groups data, this only loads the data we require based on the timewindow
+        // fill groups .data, this only loads the .data we require based on the timewindow
         this._getRelevantData(groupIds, groupsData, minDate, maxDate);
 
         // apply sampling, if disabled, it will pass through this function.
@@ -13344,10 +13344,10 @@ return /******/ (function(modules) { // webpackBootstrap
           preprocessedGroupData[groupIds[i]] = this._convertXcoordinates(groupsData[groupIds[i]]);
         }
 
-        // now all needed data has been collected we start the processing.
+        // now all needed .data has been collected we start the processing.
         this._getYRanges(groupIds, preprocessedGroupData, groupRanges);
 
-        // update the Y axis first, we use this data to draw at the correct Y points
+        // update the Y axis first, we use this .data to draw at the correct Y points
         // changeCalled is required to clean the SVG on a change emit.
         changeCalled = this._updateYAxis(groupIds, groupRanges);
         var MAX_CYCLES = 5;
@@ -13390,9 +13390,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
   /**
-   * first select and preprocess the data from the datasets.
-   * the groups have their preselection of data, we now loop over this data to see
-   * what data we need to draw. Sorted data is much faster.
+   * first select and preprocess the .data from the datasets.
+   * the groups have their preselection of .data, we now loop over this .data to see
+   * what .data we need to draw. Sorted .data is much faster.
    * more optimization is possible by doing the sampling before and using the binary search
    * to find the end date to determine the increment.
    *
@@ -13409,7 +13409,7 @@ return /******/ (function(modules) { // webpackBootstrap
         group = this.groups[groupIds[i]];
         groupsData[groupIds[i]] = [];
         var dataContainer = groupsData[groupIds[i]];
-        // optimization for sorted data
+        // optimization for sorted .data
         if (group.options.sort == true) {
           var guess = Math.max(0, util.binarySearchValue(group.itemsData, minDate, 'x', 'before'));
           for (j = guess; j < group.itemsData.length; j++) {
@@ -13636,7 +13636,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   /**
    * This uses the DataAxis object to generate the correct X coordinate on the SVG window. It uses the
-   * util function toScreen to get the x coordinate from the timestamp. It also pre-filters the data and get the minMax ranges for
+   * util function toScreen to get the x coordinate from the timestamp. It also pre-filters the .data and get the minMax ranges for
    * the yAxis.
    *
    * @param datapoints
@@ -13660,7 +13660,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   /**
    * This uses the DataAxis object to generate the correct X coordinate on the SVG window. It uses the
-   * util function toScreen to get the x coordinate from the timestamp. It also pre-filters the data and get the minMax ranges for
+   * util function toScreen to get the x coordinate from the timestamp. It also pre-filters the .data and get the minMax ranges for
    * the yAxis.
    *
    * @param datapoints
@@ -14167,7 +14167,7 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Set data for the item. Existing data will be updated. The id should not
+   * Set .data for the item. Existing .data will be updated. The id should not
    * be changed. When the item is displayed, it will be redrawn immediately.
    * @param {Object} data
    */
@@ -14282,7 +14282,7 @@ return /******/ (function(modules) { // webpackBootstrap
   Item.prototype._updateContents = function (element) {
     var content;
     if (this.options.template) {
-      var itemData = this.parent.itemSet.itemsData.get(this.id); // get a clone of the data from the dataset
+      var itemData = this.parent.itemSet.itemsData.get(this.id); // get a clone of the .data from the dataset
       content = this.options.template(itemData);
     }
     else {
@@ -14323,7 +14323,7 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Process dataAttributes timeline option and set as data- attributes on dom.content
+   * Process dataAttributes timeline option and set as .data- attributes on dom.content
    * @param {Element} element   HTML element to which the attributes will be attached
    * @private
    */
@@ -14346,10 +14346,10 @@ return /******/ (function(modules) { // webpackBootstrap
         var value = this.data[name];
 
         if (value != null) {
-          element.setAttribute('data-' + name, value);
+          element.setAttribute('.data-' + name, value);
         }
         else {
-          element.removeAttribute('data-' + name);
+          element.removeAttribute('.data-' + name);
         }
       }
     }
@@ -14405,7 +14405,7 @@ return /******/ (function(modules) { // webpackBootstrap
     };
     this.overflow = false; // if contents can overflow (css styling), this flag is set to true
 
-    // validate data
+    // validate .data
     if (data) {
       if (data.start == undefined) {
         throw new Error('Property "start" missing in item ' + data.id);
@@ -14476,7 +14476,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // Update DOM when item is marked dirty. An item is marked dirty when:
     // - the item is not yet rendered
-    // - the item's data is changed
+    // - the item's .data is changed
     // - the item is selected/deselected
     if (this.dirty) {
       this._updateContents(this.dom.content);
@@ -14620,7 +14620,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }
     };
 
-    // validate data
+    // validate .data
     if (data) {
       if (data.start == undefined) {
         throw new Error('Property "start" missing in item ' + data);
@@ -14699,7 +14699,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // Update DOM when item is marked dirty. An item is marked dirty when:
     // - the item is not yet rendered
-    // - the item's data is changed
+    // - the item's .data is changed
     // - the item is selected/deselected
     if (this.dirty) {
       this._updateContents(this.dom.content);
@@ -14850,7 +14850,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }
     };
 
-    // validate data
+    // validate .data
     if (data) {
       if (data.start == undefined) {
         throw new Error('Property "start" missing in item ' + data);
@@ -14918,7 +14918,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // Update DOM when item is marked dirty. An item is marked dirty when:
     // - the item is not yet rendered
-    // - the item's data is changed
+    // - the item's .data is changed
     // - the item is selected/deselected
     if (this.dirty) {
       this._updateContents(this.dom.content);
@@ -15035,7 +15035,7 @@ return /******/ (function(modules) { // webpackBootstrap
     };
     this.overflow = false; // if contents can overflow (css styling), this flag is set to true
 
-    // validate data
+    // validate .data
     if (data) {
       if (data.start == undefined) {
         throw new Error('Property "start" missing in item ' + data.id);
@@ -15102,7 +15102,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // Update DOM when item is marked dirty. An item is marked dirty when:
     // - the item is not yet rendered
-    // - the item's data is changed
+    // - the item's .data is changed
     // - the item is selected/deselected
     if (this.dirty) {
       this._updateContents(this.dom.content);
@@ -15650,7 +15650,7 @@ return /******/ (function(modules) { // webpackBootstrap
     this.moving = true;
     this.timer = undefined; // Scheduling function. Is definded in this.start();
 
-    // load data (the disable start variable will be the same as the enabled clustering)
+    // load .data (the disable start variable will be the same as the enabled clustering)
     this.setData(data,this.constants.clustering.enabled || this.constants.hierarchicalLayout.enabled);
 
     // hierarchical layout
@@ -15659,7 +15659,7 @@ return /******/ (function(modules) { // webpackBootstrap
       this._setupHierarchicalLayout();
     }
     else {
-      // zoom so all data will fit on the screen, if clustering is enabled, we do not want start to be called here.
+      // zoom so all .data will fit on the screen, if clustering is enabled, we do not want start to be called here.
       if (this.constants.stabilize == false) {
         this.zoomExtent(undefined, true,this.constants.clustering.enabled);
       }
@@ -15732,7 +15732,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
   /**
-   * This function zooms out to fit all data on screen based on amount of nodes
+   * This function zooms out to fit all .data on screen based on amount of nodes
    *
    * @param {Boolean} [initialZoom]  | zoom based on fitted formula or range, true = fitted, default = false;
    * @param {Boolean} [disableStart] | If true, start is not called.
@@ -15829,8 +15829,8 @@ return /******/ (function(modules) { // webpackBootstrap
    * @param {Object} data              Object containing parameters:
    *                                   {Array | DataSet | DataView} [nodes] Array with nodes
    *                                   {Array | DataSet | DataView} [edges] Array with edges
-   *                                   {String} [dot] String containing data in DOT format
-   *                                   {String} [gephi] String containing data in gephi JSON format
+   *                                   {String} [dot] String containing .data in DOT format
+   *                                   {String} [gephi] String containing .data in gephi JSON format
    *                                   {Options} [options] Object with options
    * @param {Boolean} [disableStart]   | optional: disable the calling of the start function.
    */
@@ -15848,7 +15848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // set options
     this.setOptions(data && data.options);
-    // set all data
+    // set all .data
     if (data && data.dot) {
       // parse DOT file
       if(data && data.dot) {
@@ -16015,7 +16015,7 @@ return /******/ (function(modules) { // webpackBootstrap
     this._loadPhysicsSystem();
     // load the navigation system.
     this._loadNavigationControls();
-    // load the data manipulation system
+    // load the .data manipulation system
     this._loadManipulationSystem();
     // configure the smooth curves
     this._configureSmoothCurves();
@@ -16708,8 +16708,8 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Set a data set with nodes for the network
-   * @param {Array | DataSet | DataView} nodes         The data containing the nodes.
+   * Set a .data set with nodes for the network
+   * @param {Array | DataSet | DataView} nodes         The .data containing the nodes.
    * @private
    */
   Network.prototype._setNodes = function(nodes) {
@@ -16838,8 +16838,8 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Load edges by reading the data table
-   * @param {Array | DataSet | DataView} edges    The data containing the edges.
+   * Load edges by reading the .data table
+   * @param {Array | DataSet | DataView} edges    The .data containing the edges.
    * @private
    * @private
    */
@@ -17038,7 +17038,7 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Redraw the network with the current data
+   * Redraw the network with the current .data
    * chart will be resized too.
    */
   Network.prototype.redraw = function() {
@@ -17047,7 +17047,7 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Redraw the network with the current data
+   * Redraw the network with the current .data
    * @private
    */
   Network.prototype._redraw = function() {
@@ -17419,7 +17419,7 @@ return /******/ (function(modules) { // webpackBootstrap
         if (this.constants.smoothCurves.enabled == true && this.constants.smoothCurves.dynamic == true) {
           supportMovingStatus = this._doInSupportSector("_discreteStepNodes");
         }
-        // gather movement data from all sectors, if one moves, we are NOT stabilzied
+        // gather movement .data from all sectors, if one moves, we are NOT stabilzied
         for (var i = 0; i < mainMoving.length; i++) {mainMovingStatus = mainMoving[0] || mainMovingStatus;}
 
         // determine if the network has stabilzied
@@ -20446,7 +20446,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
   /**
-   * Parse a text source containing data in DOT language into a JSON object.
+   * Parse a text source containing .data in DOT language into a JSON object.
    * The object contains two lists: one with nodes and one with edges.
    *
    * DOT language reference: http://www.graphviz.org/doc/info/lang.html
@@ -21733,12 +21733,12 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
-   * Calculate the data range of the items and applies a 5% window around it.
+   * Calculate the .data range of the items and applies a 5% window around it.
    * @returns {{start: Date | null, end: Date | null}}
    * @protected
    */
   Core.prototype._getDataRange = function() {
-    // apply the data range as range
+    // apply the .data range as range
     var dataRange = this.getItemRange();
 
     // add 5% space on both sides
@@ -22845,7 +22845,7 @@ return /******/ (function(modules) { // webpackBootstrap
     var i,j;
     var barPoints = 0;
 
-    // combine all barchart data
+    // combine all barchart .data
     for (i = 0; i < groupIds.length; i++) {
       group = framework.groups[groupIds[i]];
       if (group.options.style == 'bar') {
@@ -23054,7 +23054,7 @@ return /******/ (function(modules) { // webpackBootstrap
   }
 
   /**
-   * draw the data points
+   * draw the .data points
    *
    * @param {Array} dataset
    * @param {Object} JSONcontainer
@@ -25862,7 +25862,7 @@ return /******/ (function(modules) { // webpackBootstrap
           }
       );
 
-      // returns locale data
+      // returns locale .data
       moment.localeData = function (key) {
           var locale;
 
@@ -27531,7 +27531,7 @@ return /******/ (function(modules) { // webpackBootstrap
           // detection has been started, we keep track of this, see above
           this.started = true;
 
-          // generate some event data, some basic information
+          // generate some event .data, some basic information
           var evData = this.collectEventData(element, triggerType, touchList, ev);
 
           // trigger the triggerType event before the change (TOUCH, RELEASE) events
@@ -27645,7 +27645,7 @@ return /******/ (function(modules) { // webpackBootstrap
       },
 
       /**
-       * collect basic event data
+       * collect basic event .data
        * @method collectEventData
        * @param {HTMLElement} element
        * @param {String} eventType matches `EVENT_START|MOVE|END`
@@ -27784,10 +27784,10 @@ return /******/ (function(modules) { // webpackBootstrap
       // contains all registred Hammer.gestures in the correct order
       gestures: [],
 
-      // data of the current Hammer.gesture detection session
+      // .data of the current Hammer.gesture detection session
       current: null,
 
-      // the previous Hammer.gesture session data
+      // the previous Hammer.gesture session .data
       // is a full clone of the previous gesture.current object
       previous: null,
 
@@ -27833,7 +27833,7 @@ return /******/ (function(modules) { // webpackBootstrap
               return;
           }
 
-          // extend event data with calculations about scale, distance etc
+          // extend event .data with calculations about scale, distance etc
           eventData = this.extendEventData(eventData);
 
           // hammer instance and instance options
@@ -27867,7 +27867,7 @@ return /******/ (function(modules) { // webpackBootstrap
        * @method stopDetect
        */
       stopDetect: function stopDetect() {
-          // clone current data to the store as the previous gesture
+          // clone current .data to the store as the previous gesture
           // used for the double tap gesture, since this is an other gesture detect session
           this.previous = Utils.extend({}, this.current);
 
@@ -28264,7 +28264,7 @@ return /******/ (function(modules) { // webpackBootstrap
                           startCenter.clientX += ev.deltaX * factor;
                           startCenter.clientY += ev.deltaY * factor;
 
-                          // recalculate event data using new start point
+                          // recalculate event .data using new start point
                           ev = Detection.extendEventData(ev);
                       }
                   }
@@ -28922,7 +28922,7 @@ return /******/ (function(modules) { // webpackBootstrap
   *
   */
   exports.startWithClustering = function() {
-   // cluster if the data set is big
+   // cluster if the .data set is big
    this.clusterToFit(this.constants.clustering.initialMaxNodes, true);
 
    // updates the lables after clustering
@@ -29968,7 +29968,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   /**
    * We determine how many connections denote an important hub.
-   * We take the mean + 2*std as the important hub size. (Assuming a normal distribution of data, ~2.2%)
+   * We take the mean + 2*std as the important hub size. (Assuming a normal distribution of .data, ~2.2%)
    *
    * @private
    */
@@ -30262,7 +30262,7 @@ return /******/ (function(modules) { // webpackBootstrap
     // we move the set references from the active to the frozen stack.
     this.sectors["frozen"][sectorId] = this.sectors["active"][sectorId];
 
-    // we have moved the sector data into the frozen set, we now remove it from the active set
+    // we have moved the sector .data into the frozen set, we now remove it from the active set
     this._deleteActiveSector(sectorId);
   };
 
@@ -30278,15 +30278,15 @@ return /******/ (function(modules) { // webpackBootstrap
     // we move the set references from the frozen to the active stack.
     this.sectors["active"][sectorId] = this.sectors["frozen"][sectorId];
 
-    // we have moved the sector data into the active set, we now remove it from the frozen stack
+    // we have moved the sector .data into the active set, we now remove it from the frozen stack
     this._deleteFrozenSector(sectorId);
   };
 
 
   /**
-   * This function merges the data from the currently active sector with a frozen sector. This is used
+   * This function merges the .data from the currently active sector with a frozen sector. This is used
    * in the process of reverting back to the previously active sector.
-   * The data that is placed in the frozen (the previously active) sector is the node that has been removed from it
+   * The .data that is placed in the frozen (the previously active) sector is the node that has been removed from it
    * upon the creation of a new active sector.
    *
    * @param sectorId
@@ -30389,7 +30389,7 @@ return /******/ (function(modules) { // webpackBootstrap
         // This previous sector is the one we will reactivate
         this._mergeThisWithFrozen(previousSector);
 
-        // the previously active (frozen) sector now has all the data from the currently active sector.
+        // the previously active (frozen) sector now has all the .data from the currently active sector.
         // we can now delete the active sector.
         this._deleteActiveSector(sector);
 
@@ -31177,7 +31177,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   /**
    * handle the onRelease event. These functions are here for the navigation controls module
-   * and data manipulation module.
+   * and .data manipulation module.
    *
     * @private
    */
@@ -31849,7 +31849,7 @@ return /******/ (function(modules) { // webpackBootstrap
           });
         }
         else {
-          throw new Error('The function for add does not support two arguments (data,callback)');
+          throw new Error('The function for add does not support two arguments (.data,callback)');
           this._createManipulatorBar();
           this.moving = true;
           this.start();
@@ -31883,7 +31883,7 @@ return /******/ (function(modules) { // webpackBootstrap
           });
         }
         else {
-          throw new Error('The function for connect does not support two arguments (data,callback)');
+          throw new Error('The function for connect does not support two arguments (.data,callback)');
           this.moving = true;
           this.start();
         }
@@ -31914,7 +31914,7 @@ return /******/ (function(modules) { // webpackBootstrap
           });
         }
         else {
-          throw new Error('The function for edit does not support two arguments (data, callback)');
+          throw new Error('The function for edit does not support two arguments (.data, callback)');
           this.moving = true;
           this.start();
         }
@@ -31957,7 +31957,7 @@ return /******/ (function(modules) { // webpackBootstrap
         });
       }
       else {
-        throw new Error('The function for edit does not support two arguments (data, callback)');
+        throw new Error('The function for edit does not support two arguments (.data, callback)');
       }
     }
     else {
@@ -31991,7 +31991,7 @@ return /******/ (function(modules) { // webpackBootstrap
             });
           }
           else {
-            throw new Error('The function for delete does not support two arguments (data, callback)')
+            throw new Error('The function for delete does not support two arguments (.data, callback)')
           }
         }
         else {
